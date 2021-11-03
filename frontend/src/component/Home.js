@@ -9,6 +9,7 @@ class Home extends React.Component {
       signIn: false,
       user: {
         username: "",
+        user_id: "",
         name: "",
         email: "",
         rank: 0,
