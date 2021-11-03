@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, abort
 from sqlalchemy.sql.functions import user
 from startApp import app
 from flask_sqlalchemy import SQLAlchemy
@@ -46,9 +46,41 @@ class Signup(Resource):
         db.session.commit()
         return {"user_id": str(user_id)}
 
+@api.route("/login")
+class Login(Resource):
+    @api.expect(login_fields)
+    def post(self):
+        json = request.get_json()
 
-@api.route("/register")
+        username = json.get("username")
+        password = json.get("password")
+        object = hashlib.sha1(bytes(password, "utf-8"))
+        hashedPassword = object.hexdigest()
+        result = db.session.query(User).filter(User.username == username).filter(User.password == hashedPassword).first()
+        if result and result.user_id:
+            return {"user_id": str(result.user_id)}
+        else:
+            return abort(422, "incorrect login")
+
+@api.route("/profile")
 class Register(Resource):
+    @api.doc(params=({"user_id": "users_id"}))
+    def get(self):
+        user_id = request.args.get("user_id")
+
+        result = db.session.query(User_Profile).filter(User_Profile.user_id == user_id).first()
+        temp = {
+            "username": result.username,
+            "name": result.name,
+            "user_id": result.user_id,
+            "email": result.email,
+            "wins": int(result.wins),
+            "losses": int(result.losses),
+            "score": int(result.score),
+        }
+        token = jwt.encode(payload=temp, key="123456")
+        return {"token": token}
+
     @api.expect(register_fields)
     def post(self):
         json = request.get_json()
