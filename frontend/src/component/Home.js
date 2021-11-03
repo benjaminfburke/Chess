@@ -25,6 +25,12 @@ class Home extends React.Component {
             <Link to="/signup">Sign Up</Link>
           </div>
         )}
+
+{!this.state.signIn && (
+          <div>
+            <Link to="/Homepage">Home</Link>
+          </div>
+        )}
       </div>
     );
   }
