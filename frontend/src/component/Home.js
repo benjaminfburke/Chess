@@ -26,9 +26,14 @@ class Home extends React.Component {
           </div>
         )}
 
-{!this.state.signIn && (
+        {!this.state.signIn && (
           <div>
             <Link to="/Homepage">Home</Link>
+          </div>
+        )}
+        {!this.state.signIn && (
+          <div>
+            <Link to="/login">Login</Link>
           </div>
         )}
       </div>

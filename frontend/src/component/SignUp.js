@@ -74,7 +74,7 @@ class SignUp extends React.Component {
       });
 
     await axios
-      .post("http://127.0.0.1:5000/register", {
+      .post("http://127.0.0.1:5000/profile", {
         username: user,
         user_id: this.state.user_id,
         name: name,
