@@ -24,6 +24,8 @@ class Signup(Resource):
     def post(self):
         json = request.get_json()
 
+        print(json)
+
         username = json.get("username")
         password = json.get("password")
         object = hashlib.sha1(bytes(password, "utf-8"))
