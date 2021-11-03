@@ -8,6 +8,7 @@ class SignUp extends React.Component {
     super(props);
     this.state = {
       signin: false,
+      user_id: "",
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.checkPassword = this.checkPassword.bind(this);
@@ -61,10 +62,27 @@ class SignUp extends React.Component {
       })
       .then((result) => {
         console.log(result);
+        this.setState({ user_id: result.data.user_id });
         if (result.data === "Username is taken") {
           alert("The username " + user + " is already taken");
           return;
         }
+      })
+      .catch((err) => {
+        console.log(err);
+        return;
+      });
+
+    await axios
+      .post("http://127.0.0.1:5000/register", {
+        username: user,
+        user_id: this.state.user_id,
+        name: name,
+        email: email,
+      })
+      .then((result) => {
+        console.log(result);
+        document.cookie = "UserIdentity=" + result.data.token;
       })
       .catch((err) => {
         console.log(err);
