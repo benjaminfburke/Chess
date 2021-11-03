@@ -10,6 +10,7 @@ class SignUp extends React.Component {
       signin: false,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.checkPassword = this.checkPassword.bind(this);
   }
   checkPassword(password) {
     var message = "";
@@ -47,7 +48,7 @@ class SignUp extends React.Component {
       return;
     }
 
-    var output = checkPassword(password);
+    var output = this.checkPassword(password);
     if (output.length > 0) {
       alert(output);
       return;
