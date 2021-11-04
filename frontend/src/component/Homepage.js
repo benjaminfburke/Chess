@@ -21,7 +21,7 @@ class Homepage extends React.Component {
         return (
           <div>
               
-            <h2>Sign Up</h2>
+            <h2>Main page</h2>
             <br />
             <Form>
               <Row>
@@ -34,12 +34,12 @@ class Homepage extends React.Component {
                   <Button type="submit">PlayNewGame</Button>
                   <br />
                   <br />
-                  <Button type="submit">History</Button>
+                  <Link to="/history" className="btn btn-primary">History</Link>
                   <br />
                   <br />
 
 
-                  <Link to="/signup" className="btn btn-primary">Account Information</Link>
+                  <Link to="/accountinformation" className="btn btn-primary">Account Information</Link>
                 </Col>
               </Row>
             </Form>

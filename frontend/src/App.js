@@ -3,7 +3,8 @@ import Home from "./component/Home";
 import SignUp from "./component/SignUp";
 import Homepage from "./component/Homepage";
 import Login from "./component/Login";
-
+import AccountInformation from "./component/AccountInformation";
+import History from "./component/History";
 function App() {
   return (
     <Router>
@@ -13,6 +14,8 @@ function App() {
           <Route path="/signup" component={() => <SignUp />} />
           <Route path="/Homepage" component={() => <Homepage />} />
           <Route path="/login" component={() => <Login />} />
+          <Route path="/accountinformation" component={() => <AccountInformation />} />
+          <Route path="/history" component={() => <History />} />
         </Switch>
       </div>
     </Router>
