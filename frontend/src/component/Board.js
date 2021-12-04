@@ -47,7 +47,7 @@ class Board extends React.Component {
     console.log(targetSquare);
     this.setState({
       [sourceSquare]: "",
-      [targetSquare]: "wP",
+      [targetSquare]: this.state[sourceSquare],
     });
   }
   render() {
