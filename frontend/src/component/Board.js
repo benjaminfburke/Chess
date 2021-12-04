@@ -1,6 +1,7 @@
 import React from "react";
 import { Chessboard } from "react-chessboard";
 const jsonWeb = require("jsonwebtoken");
+const chessBoard = require("Chessboard");
 
 class Board extends React.Component {
   constructor(props) {
@@ -19,6 +20,8 @@ class Board extends React.Component {
       [sourceSquare]: "",
       [targetSquare]: "wP",
     });
+    var string = chessBoard.objToFen(this.state);
+    console.log(string);
   }
   render() {
     return (
