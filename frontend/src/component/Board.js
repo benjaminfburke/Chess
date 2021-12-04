@@ -8,8 +8,38 @@ class Board extends React.Component {
     super(props);
     this.onDrop = this.onDrop.bind(this);
     this.state = {
-      e4: "wP",
-      h7: "bN",
+      a1:"wR",
+      b1:"wN",
+      c1:"wB",
+      d1:"wQ",
+      e1:"wK",
+      f1:"wB",
+      g1:"wN",
+      h1:"wR",
+      a2:"wP",
+      b2:"wP",
+      c2:"wP",
+      d2:"wP",
+      e2:"wP",
+      f2:"wP",
+      g2:"wP",
+      h2:"wP",
+      a7:"bP",
+      b7:"bP",
+      c7:"bP",
+      d7:"bP",
+      e7:"bP",
+      f7:"bP",
+      g7:"bP",
+      h7:"bP",
+      a8:"bR",
+      b8:"bN",
+      c8:"bB",
+      d8:"bK",
+      e8:"bQ",
+      f8:"bB",
+      g8:"bN",
+      h8:"bR"
     };
   }
 
@@ -18,7 +48,7 @@ class Board extends React.Component {
     console.log(targetSquare);
     this.setState({
       [sourceSquare]: "",
-      [targetSquare]: "wP",
+      [targetSquare]: this.state[sourceSquare],
     });
     var string = chessBoard.objToFen(this.state);
     console.log(string);
