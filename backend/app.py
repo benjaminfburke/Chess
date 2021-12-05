@@ -6,7 +6,7 @@ from flask_cors import CORS
 from flask_restx import Resource, Api, fields
 import uuid
 from database.session import db
-from metadata.User import User, User_Profile
+from metadata.User import User, User_Profile,History
 import hashlib
 import jwt
 
@@ -18,6 +18,10 @@ login_fields = api.model(
     "login", {"username": fields.String, "password": fields.String}
 )
 
+history_fields = api.model(
+    "history", {"game_id":fields.String,"user_id": fields.String, "opponent": fields.String,"outcome":fields.String,"number_of_moves":fields.Integer}
+)
+
 register_fields = api.model(
     "register",
     {
@@ -27,6 +31,36 @@ register_fields = api.model(
         "email": fields.String,
     },
 )
+@api.route("/history")
+class history(Resource):
+    @api.expect(history_fields)
+    def post(self):
+        json = request.get_json()
+        game_id =json.get("game_id")
+        user_id =json.get("user_id")
+        outcome =json.get("outcome")
+        opponent=json.get("opponent")
+
+        number_of_moves=json.get("number_of_moves")
+        
+        newHistory = History(game_id =game_id, user_id =user_id, opponent =opponent,outcome =outcome, number_of_moves=number_of_moves)
+        db.session.add(newHistory)
+        db.session.commit()
+        return{"game_id":str(game_id)}
+    @api.doc(params=({"game_id": "game_id"}))
+    def get(self):
+        user_id = request.args.get("game_id")
+
+        result = db.session.query(History).filter(History.user_id == user_id).first()
+        temp = {
+            "game_id": result.game_id,
+            "user_id": result.user_id,
+            "opponent": result.opponent,
+            "outcome":result.outcome,
+            "number_of_moves": int(result.number_of_moves),
+            
+        }
+        return temp
 
 
 @api.route("/signin")

@@ -37,7 +37,7 @@ class History(db.Model):
     number_of_moves = Column(Numeric, nullable=False)
     
 class Game(db.Model):
-    __tablename__ = "user_profile"
+    __tablename__ = "game"
     __table_args__ = {"schema": "auth"}
 
     game_id = Column(Text, nullable=False, primary_key=True)
