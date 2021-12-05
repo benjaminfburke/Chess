@@ -6,7 +6,7 @@ from flask_cors import CORS
 from flask_restx import Resource, Api, fields
 import uuid
 from database.session import db
-from metadata.User import User, User_Profile
+from metadata.User import User, User_Profile, Pairing
 import hashlib
 import jwt
 
@@ -28,6 +28,10 @@ register_fields = api.model(
     },
 )
 
+pairing_fields = api.model(
+    "pairing", {"game_id": fields.String, "user1_id": fields.String, "user2_id": fields.String}
+)
+
 
 @api.route("/signin")
 class Signup(Resource):
@@ -45,6 +49,48 @@ class Signup(Resource):
         db.session.add(newUser)
         db.session.commit()
         return {"user_id": str(user_id)}
+
+@api.route("/pairing")
+class PairingGame(Resource):
+    @api.expect(pairing_fields)
+    def post(self):
+        json = request.get_json()
+
+        user1_id = json.get("user1_id")
+        user2_id = json.get("user2_id")
+        game_id = json.get("game_id")
+
+        newPairing = Pairing(game_id=game_id, user1_id=user1_id, user2_id=user2_id)
+        db.session.add(newPairing)
+        db.session.commit()
+
+        return {"game_id": str(game_id)}
+
+
+    @api.doc(params={"user1_id": "user1_id"})
+    def get(self):
+        user1_id = request.args.get("user1_id")
+
+        result = db.session.query(Pairing).filter(Pairing.user1_id == user1_id).all()
+        pair = []
+        for r in result:
+            temp = {
+                "game_id": r.game_id,
+                "user1_id": r.user1_id,
+                "user2_id": r.user2_id,
+            }
+            pair.append(temp)
+        
+        result2 = db.session.query(Pairing).filter(Pairing.user1_id == user1_id).all()
+        for r in result2:
+            temp = {
+                "game_id": r.game_id,
+                "user1_id": r.user1_id,
+                "user2_id": r.user2_id,
+            }
+            pair.append(temp)
+        return pair
+
 
 @api.route("/login")
 class Login(Resource):
