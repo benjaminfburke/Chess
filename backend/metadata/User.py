@@ -24,6 +24,27 @@ class User_Profile(db.Model):
     losses = Column(Numeric, default=0)
     score = Column(Numeric, default=1200)
 
+
+class History(db.Model):
+    __tablename__ = "history"
+    __table_args__ = {"schema": "auth"}
+
+    user_id = Column(Text, nullable=False)
+    opponent = Column(Text, nullable=False)
+    game_id = Column(Text, nullable=False, primary_key=True)
+
+    outcome= Column(Text, nullable=False)
+    number_of_moves = Column(Numeric, nullable=False)
+    
+class Game(db.Model):
+    __tablename__ = "user_profile"
+    __table_args__ = {"schema": "auth"}
+
+    game_id = Column(Text, nullable=False, primary_key=True)
+    gameboard = Column(Text, nullable=False)
+    point_value = Column(Numeric, nullable=False)
+    move = Column(Text, nullable=False)
+
 class pairing(db.Model):
     __tablename__ = "pairing"
     __table_args__ = {"schema": "auth"}
