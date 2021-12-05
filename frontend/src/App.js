@@ -7,6 +7,7 @@ import AccountInformation from "./component/AccountInformation";
 import History from "./component/History";
 import AppNavbar from "./component/NavBar";
 
+import Board from "./component/Board";
 function App() {
   return (
     <Router>
@@ -17,8 +18,12 @@ function App() {
           <Route path="/signup" component={() => <SignUp />} />
           <Route path="/Homepage" component={() => <Homepage />} />
           <Route path="/login" component={() => <Login />} />
-          <Route path="/accountinformation" component={() => <AccountInformation />} />
+          <Route
+            path="/accountinformation"
+            component={() => <AccountInformation />}
+          />
           <Route path="/history" component={() => <History />} />
+          <Route path="/board" component={() => <Board />} />
         </Switch>
       </div>
     </Router>

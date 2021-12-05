@@ -37,6 +37,9 @@ class Home extends React.Component {
             <Link to="/Homepage">Home</Link>
           </div>
         )}
+        <div>
+          <Link to="/board">Board</Link>
+        </div>
       </div>
     );
   }

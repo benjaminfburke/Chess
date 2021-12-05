@@ -36,3 +36,12 @@ class History(db.Model):
     outcome= Column(Text, nullable=False)
     number_of_moves = Column(Numeric, nullable=False)
     
+class Game(db.Model):
+    __tablename__ = "user_profile"
+    __table_args__ = {"schema": "auth"}
+
+    game_id = Column(Text, nullable=False, primary_key=True)
+    gameboard = Column(Text, nullable=False)
+    point_value = Column(Numeric, nullable=False)
+    move = Column(Text, nullable=False)
+
