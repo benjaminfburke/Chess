@@ -23,3 +23,13 @@ class User_Profile(db.Model):
     wins = Column(Numeric, default=0)
     losses = Column(Numeric, default=0)
     score = Column(Numeric, default=1200)
+
+class Game(db.Model):
+    __tablename__ = "user_profile"
+    __table_args__ = {"schema": "auth"}
+
+    game_id = Column(Text, nullable=False, primary_key=True)
+    gameboard = Column(Text, nullable=False)
+    point_value = Column(Numeric, nullable=False)
+    move = Column(Text, nullable=False)
+
