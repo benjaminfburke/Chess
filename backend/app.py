@@ -25,6 +25,10 @@ game_fields = api.model(
     "game", {"gameboard": fields.String, "point_value": fields.Integer, "white": fields.String, "black": fields.String}
 )
 
+update_game = api.model(
+    "game", {"game_id": fields.String, "gameboard": fields.String, "point_value": fields.Integer, "white": fields.String, "black": fields.String}
+)
+
 register_fields = api.model(
     "register",
     {
@@ -97,6 +101,23 @@ class Gameboard(Resource):
             "black": result.black
         }
         return temp
+    @api.expect(update_game)
+    def put(self):
+        json = request.get_json()
+
+        gameboard = json.get("gameboard")
+        point_value = json.get("point_value")
+        white = json.get("white")
+        black = json.get("black")
+        game_id = json.get("game_id")
+        
+        db.session.query(Game).filter(Game.game_id == game_id).update(
+            game_id=game_id, gameboard=gameboard, point_value=point_value, white=white, black=black
+        )
+        db.session.commit()
+        
+        return {"game_id": str(game_id)}
+        
 
 
 @api.route("/signin")
@@ -106,6 +127,9 @@ class Signup(Resource):
         json = request.get_json()
 
         username = json.get("username")
+        user = db.session.query(User).filter(User.username == username).count()
+        if (user):
+            return abort(403, "Username exists")
         password = json.get("password")
         object = hashlib.sha1(bytes(password, "utf-8"))
         hashedPassword = object.hexdigest()
@@ -193,7 +217,7 @@ class Register(Resource):
         }
         token = jwt.encode(payload=temp, key="123456")
         return {"token": token}
-
+        
     @api.expect(register_fields)
     def post(self):
         json = request.get_json()
@@ -229,6 +253,16 @@ class Register(Resource):
 
         token = jwt.encode(payload=temp, key="123456")
         return {"token": token}
+    
+@api.route("/user_id")
+class GetUserID(Resource):
+    @api.doc(params={'username':"username"})
+    def get(self):
+        username = request.args.get("username")
+        user_id = db.session.query(User_Profile).filter(User_Profile.username == username).first()
+        if user_id is None:
+            return abort(403, "User doesn't exist")
+        return {"opponent_id": str(user_id.user_id)}
 
 
 if __name__ == "__main__":
