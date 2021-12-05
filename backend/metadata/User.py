@@ -37,13 +37,14 @@ class History(db.Model):
     number_of_moves = Column(Numeric, nullable=False)
     
 class Game(db.Model):
-    __tablename__ = "user_profile"
+    __tablename__ = "game"
     __table_args__ = {"schema": "auth"}
 
     game_id = Column(Text, nullable=False, primary_key=True)
     gameboard = Column(Text, nullable=False)
     point_value = Column(Numeric, nullable=False)
-    move = Column(Text, nullable=False)
+    white = Column(Text, nullable=False)
+    black = Column(Text, nullable=False)
 
 class pairing(db.Model):
     __tablename__ = "pairing"

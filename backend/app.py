@@ -6,7 +6,7 @@ from flask_cors import CORS
 from flask_restx import Resource, Api, fields
 import uuid
 from database.session import db
-from metadata.User import User, User_Profile
+from metadata.User import User, User_Profile, Game
 import hashlib
 import jwt
 
@@ -18,6 +18,10 @@ login_fields = api.model(
     "login", {"username": fields.String, "password": fields.String}
 )
 
+game_fields = api.model(
+    "game", {"gameboard": fields.String, "point_value": fields.Integer, "white": fields.String, "black": fields.String}
+)
+
 register_fields = api.model(
     "register",
     {
@@ -27,6 +31,36 @@ register_fields = api.model(
         "email": fields.String,
     },
 )
+
+@api.route("/game")
+class Gameboard(Resource):
+    @api.expect(game_fields)
+    def post(self):
+        json = request.get_json()
+
+        gameboard = json.get("gameboard")
+        point_value = json.get("point_value")
+        white = json.get("white")
+        black = json.get("black")
+
+        game_id = uuid.uuid4()
+        
+        newGame = Game(game_id=game_id, gameboard=gameboard, point_value=point_value, white=white, black=black)
+        db.session.add(newGame)
+        db.session.commit()
+        return {"game_id": str(game_id)}
+    @api.doc(params=({"game_id": "game_id"}))
+    def get(self):
+        game_id = request.args.get("game_id")
+
+        result = db.session.query(Game).filter(Game.game_id == game_id).first()
+        temp = {
+            "gameboard": result.gameboard,
+            "point_value": int(result.point_value),
+            "white": result.white,
+            "black": result.black
+        }
+        return temp
 
 
 @api.route("/signin")
@@ -61,6 +95,7 @@ class Login(Resource):
             return {"user_id": str(result.user_id)}
         else:
             return abort(422, "incorrect login")
+
 
 @api.route("/profile")
 class Register(Resource):
