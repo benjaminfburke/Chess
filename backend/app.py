@@ -6,7 +6,11 @@ from flask_cors import CORS
 from flask_restx import Resource, Api, fields
 import uuid
 from database.session import db
+<<<<<<< HEAD
 from metadata.User import User, User_Profile, Pairing
+=======
+from metadata.User import User, User_Profile, Game
+>>>>>>> 225aa9d4b3679ce3b12a134c896a3a3244613ee9
 import hashlib
 import jwt
 
@@ -16,6 +20,10 @@ api = Api(app)
 
 login_fields = api.model(
     "login", {"username": fields.String, "password": fields.String}
+)
+
+game_fields = api.model(
+    "game", {"gameboard": fields.String, "point_value": fields.Integer, "white": fields.String, "black": fields.String}
 )
 
 register_fields = api.model(
@@ -28,9 +36,41 @@ register_fields = api.model(
     },
 )
 
+<<<<<<< HEAD
 pairing_fields = api.model(
     "pairing", {"game_id": fields.String, "user1_id": fields.String, "user2_id": fields.String}
 )
+=======
+@api.route("/game")
+class Gameboard(Resource):
+    @api.expect(game_fields)
+    def post(self):
+        json = request.get_json()
+
+        gameboard = json.get("gameboard")
+        point_value = json.get("point_value")
+        white = json.get("white")
+        black = json.get("black")
+
+        game_id = uuid.uuid4()
+        
+        newGame = Game(game_id=game_id, gameboard=gameboard, point_value=point_value, white=white, black=black)
+        db.session.add(newGame)
+        db.session.commit()
+        return {"game_id": str(game_id)}
+    @api.doc(params=({"game_id": "game_id"}))
+    def get(self):
+        game_id = request.args.get("game_id")
+
+        result = db.session.query(Game).filter(Game.game_id == game_id).first()
+        temp = {
+            "gameboard": result.gameboard,
+            "point_value": int(result.point_value),
+            "white": result.white,
+            "black": result.black
+        }
+        return temp
+>>>>>>> 225aa9d4b3679ce3b12a134c896a3a3244613ee9
 
 
 @api.route("/signin")
@@ -107,6 +147,7 @@ class Login(Resource):
             return {"user_id": str(result.user_id)}
         else:
             return abort(422, "incorrect login")
+
 
 @api.route("/profile")
 class Register(Resource):

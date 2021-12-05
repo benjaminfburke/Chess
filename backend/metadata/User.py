@@ -43,7 +43,8 @@ class Game(db.Model):
     game_id = Column(Text, nullable=False, primary_key=True)
     gameboard = Column(Text, nullable=False)
     point_value = Column(Numeric, nullable=False)
-    move = Column(Text, nullable=False)
+    white = Column(Text, nullable=False)
+    black = Column(Text, nullable=False)
 
 class Pairing(db.Model):
     __tablename__ = "pairing"
