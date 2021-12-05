@@ -23,3 +23,16 @@ class User_Profile(db.Model):
     wins = Column(Numeric, default=0)
     losses = Column(Numeric, default=0)
     score = Column(Numeric, default=1200)
+
+
+class History(db.Model):
+    __tablename__ = "history"
+    __table_args__ = {"schema": "auth"}
+
+    user_id = Column(Text, nullable=False)
+    opponent = Column(Text, nullable=False)
+    game_id = Column(Text, nullable=False, primary_key=True)
+
+    outcome= Column(Text, nullable=False)
+    number_of_moves = Column(Numeric, nullable=False)
+    
