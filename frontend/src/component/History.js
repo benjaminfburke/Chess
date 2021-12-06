@@ -14,14 +14,7 @@ class History extends React.Component {
           moves: 0,
           rating:0
         },
-        games: [
-          {
-            game_id: "hello",
-number_of_moves: -1,
-opponent: "string",
-outcome: "string"
-          }
-        ]
+        games: []
       };
     }
 
@@ -30,9 +23,17 @@ outcome: "string"
           <div className="pl-3 pr-3 pt-2">
             <h2>History</h2>
             <h5>user_id: {this.state.user.user_id}</h5>
-            <h5>outcome: {this.state.games[0].outcome}</h5>
-            <h5>moves: {this.state.games[0].number_of_moves}</h5>
+            {this.state.games.map((item)=>{
+          //return (<div><h1>{item.game_id}</h1></div>)
+          
+          return (<div><h5>outcome: {item.outcome}</h5>
+            <h5>moves: {item.number_of_moves}</h5>
             <h5>rating: {this.state.user.score}</h5>
+               </div>
+              )
+
+        })}
+            
             <Link to="/Homepage" className="btn btn-primary">Home page</Link>
           </div>
         );
