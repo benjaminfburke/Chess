@@ -62,7 +62,7 @@ class history(Resource):
     def get(self):
         user_id = request.args.get("game_id")
 
-        result = db.session.query(History).filter(History.user_id == user_id).first()
+        result = db.session.query(History).filter(History.user_id == user_id).all()
         temp = {
             "game_id": result.game_id,
             "user_id": result.user_id,
