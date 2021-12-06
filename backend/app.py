@@ -29,6 +29,10 @@ update_game = api.model(
     "game", {"game_id": fields.String, "gameboard": fields.String, "point_value": fields.Integer, "white": fields.String, "black": fields.String}
 )
 
+update_profile = api.model(
+    "profile", {"username": fields.String, "name": fields.String, "user_id": fields.String, "email": fields.String, "wins": fields.Integer, "losses": fields.Integer, "score": fields.Integer}
+)
+
 register_fields = api.model(
     "register",
     {
@@ -255,6 +259,25 @@ class Register(Resource):
 
         token = jwt.encode(payload=temp, key="123456")
         return {"token": token}
+    
+    @api.expect(update_profile)
+    def put(self):
+        json = request.get_json()
+
+        username = json.get("username")
+        name = json.get("name")
+        user_id = json.get("user_id")
+        email = json.get("email")
+        wins = json.get("wins")
+        losses = json.get("losses")
+        score = json.get("score")
+        
+        db.session.query(User_Profile).filter(User_Profile.user_id == user_id).update(
+            username=username, name=name, user_id=user_id, email=email, wins=wins, losses=losses, score=score
+        )
+        db.session.commit()
+        
+        return {"user_id": str(user_id)}
     
 @api.route("/user_id")
 class GetUserID(Resource):
