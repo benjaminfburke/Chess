@@ -171,7 +171,7 @@ class PairingGame(Resource):
             }
             pair.append(temp)
         
-        result2 = db.session.query(Pairing).filter(Pairing.user1_id == user1_id).all()
+        result2 = db.session.query(Pairing).filter(Pairing.user2_id == user1_id).all()
         for r in result2:
             temp = {
                 "game_id": r.game_id,

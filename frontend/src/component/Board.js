@@ -17,7 +17,6 @@ class Board extends React.Component {
       side: "white",
     };
   }
-
   onDrop(sourceSquare, targetSquare) {
     Game.move({ from: sourceSquare, to: targetSquare });
     console.log(sourceSquare);
@@ -25,8 +24,11 @@ class Board extends React.Component {
     this.setState({
       fen: Game.fen(),
     });
+
+
     if (Game.game_over()) {
-      console.log("Winner");
+      console.log(Game.turn());
+      
     }
   }
   render() {

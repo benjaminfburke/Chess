@@ -10,6 +10,7 @@ class Homepage extends React.Component {
     this.state = {
       signin: false,
       user_id: "",
+      games: []
     };
   }
 
@@ -37,19 +38,33 @@ class Homepage extends React.Component {
             </Col>
           </Row>
         </Form>
+        {this.state.games.map((item)=>{
+          //return (<div><h1>{item.game_id}</h1></div>)
+          
+          return (<div> <br /> <Link to={"/board/"+item.game_id} className="btn btn-primary">
+           
+                {item.game_id}
+                
+              </Link>
+               <br />
+               </div>
+              )
+
+        })}
       </div>
     );
   }
 
   async componentDidMount() {
     if (document.cookie) {
+      console.log(document.cookie)
       const token = document.cookie.substring(13);
       const decoded = jsonWeb.verify(token, "123456");
       await this.setState({ user: decoded, signIn: true });
       console.log(this.state);
 
       await axios
-        .get(`http://127.0.0.1:5000/pairing?user1_id=${this.state.user_id}`)
+        .get(`http://127.0.0.1:5000/pairing?user1_id=${this.state.user.user_id}`)
         .then((result) => {
           console.log(result);
           this.setState({ games: result.data });
