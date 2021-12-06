@@ -4,16 +4,10 @@ import { Navbar, Nav, NavDropdown } from "react-bootstrap";
 import logo from "../logo.svg";
 
 function AppNavbar() {
-  function signOut(){
-      console.log('hi')
-  }
-
   function delete_cookie() {
-    document.cookie = document.cookie +
-        ";expires=Thu, 01 Jan 1970 00:00:01 GMT";
-    
+    document.cookie =
+      document.cookie + ";expires=Thu, 01 Jan 1970 00:00:01 GMT";
   }
-  
 
   return (
     <div>
@@ -39,7 +33,6 @@ function AppNavbar() {
               as={Link}
               to="/"
               onClick={delete_cookie}
-              
             >
               Sign Out
             </NavDropdown.Item>

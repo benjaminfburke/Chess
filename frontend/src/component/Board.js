@@ -1,65 +1,62 @@
 import React from "react";
 import { Chessboard } from "react-chessboard";
+import axios from "axios";
 const jsonWeb = require("jsonwebtoken");
+const Chess = require("chess.js");
+let Game = new Chess();
 
 class Board extends React.Component {
   constructor(props) {
     super(props);
     this.onDrop = this.onDrop.bind(this);
     this.state = {
-      a1:"wR",
-      b1:"wN",
-      c1:"wB",
-      d1:"wQ",
-      e1:"wK",
-      f1:"wB",
-      g1:"wN",
-      h1:"wR",
-      a2:"wP",
-      b2:"wP",
-      c2:"wP",
-      d2:"wP",
-      e2:"wP",
-      f2:"wP",
-      g2:"wP",
-      h2:"wP",
-      a7:"bP",
-      b7:"bP",
-      c7:"bP",
-      d7:"bP",
-      e7:"bP",
-      f7:"bP",
-      g7:"bP",
-      h7:"bP",
-      a8:"bR",
-      b8:"bN",
-      c8:"bB",
-      d8:"bK",
-      e8:"bQ",
-      f8:"bB",
-      g8:"bN",
-      h8:"bR"
+      game_id: this.props.match.params.gameid,
+      signIn: true,
+      user: {},
+      fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+      side: "white",
     };
   }
 
   onDrop(sourceSquare, targetSquare) {
+    Game.move({ from: sourceSquare, to: targetSquare });
     console.log(sourceSquare);
     console.log(targetSquare);
     this.setState({
-      [sourceSquare]: "",
-      [targetSquare]: this.state[sourceSquare],
+      fen: Game.fen(),
     });
+    if (Game.game_over()) {
+      console.log("Winner");
+    }
   }
   render() {
     return (
       <div>
         <Chessboard
           id="BasicBoard"
-          position={this.state}
+          position={this.state.fen}
           onPieceDrop={this.onDrop}
+          boardOrientation={this.state.side}
         />
       </div>
     );
+  }
+  async componentDidMount() {
+    Game = new Chess(this.state.fen);
+    if (document.cookie) {
+      const token = document.cookie.substring(13);
+      const decoded = jsonWeb.verify(token, "123456");
+      await this.setState({ user: decoded, signIn: true });
+      await axios
+        .get(`http://127.0.0.1:5000/game?game_id=${this.state.game_id}`)
+        .then((result) => {
+          console.log(result.data);
+          this.setState({ game: result.data, fen: result.data.gameboard });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }
 }
 

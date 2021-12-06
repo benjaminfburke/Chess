@@ -6,13 +6,13 @@ import Login from "./component/Login";
 import AccountInformation from "./component/AccountInformation";
 import History from "./component/History";
 import AppNavbar from "./component/NavBar";
-
+import CreateGame from "./component/CreateGame";
 import Board from "./component/Board";
 function App() {
   return (
     <Router>
       <div className="App">
-        <AppNavbar/>
+        <AppNavbar />
         <Switch>
           <Route path="/" exact component={() => <Home />} />
           <Route path="/signup" component={() => <SignUp />} />
@@ -23,7 +23,8 @@ function App() {
             component={() => <AccountInformation />}
           />
           <Route path="/history" component={() => <History />} />
-          <Route path="/board" component={() => <Board />} />
+          <Route path="/board/:gameid" component={() => <Board />} />
+          <Route path="/creategame" component={() => <CreateGame />} />
         </Switch>
       </div>
     </Router>

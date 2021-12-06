@@ -40,6 +40,9 @@ class Home extends React.Component {
         <div>
           <Link to="/board">Board</Link>
         </div>
+        <div>
+          <Link to="/creategame">Start Game</Link>
+        </div>
       </div>
     );
   }
