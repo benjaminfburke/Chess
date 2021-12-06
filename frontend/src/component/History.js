@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 const jsonWeb = require("jsonwebtoken");
 
 class History extends React.Component {
@@ -37,6 +38,16 @@ async componentDidMount() {
       const decoded = jsonWeb.verify(token, "123456");
       await this.setState({ user: decoded, signIn: true });
       console.log(this.state);
+
+      await axios
+        .get(`http://127.0.0.1:5000/history?user_id=${this.state.user_id}`)
+        .then((result) => {
+          console.log(result);
+          this.setState({ games: result.data });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   }
 }
