@@ -58,12 +58,13 @@ class history(Resource):
         db.session.add(newHistory)
         db.session.commit()
         return{"game_id":str(game_id)}
-    @api.doc(params=({"game_id": "game_id"}))
+    @api.doc(params=({"user_id": "user_id"}))
     def get(self):
-        user_id = request.args.get("game_id")
-
+        user_id = request.args.get("user_id")
+        print("here")
         history = []
-        result = db.session.query(History).filter(History.user_id == user_id).all()
+        result = db.session.query(History).filter(History.user_id == user_id)
+        print(result)
         for r in result:
             temp = {
                 "game_id": r.game_id,

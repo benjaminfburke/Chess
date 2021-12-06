@@ -14,6 +14,14 @@ class History extends React.Component {
           moves: 0,
           rating:0
         },
+        games: [
+          {
+            game_id: "hello",
+number_of_moves: -1,
+opponent: "string",
+outcome: "string"
+          }
+        ]
       };
     }
 
@@ -22,9 +30,9 @@ class History extends React.Component {
           <div className="pl-3 pr-3 pt-2">
             <h2>History</h2>
             <h5>user_id: {this.state.user.user_id}</h5>
-            <h5>outcome: {this.state.user.outcome}</h5>
-            <h5>moves: {this.state.user.moves}</h5>
-            <h5>rating: {this.state.user.rating}</h5>
+            <h5>outcome: {this.state.games[0].outcome}</h5>
+            <h5>moves: {this.state.games[0].number_of_moves}</h5>
+            <h5>rating: {this.state.user.score}</h5>
             <Link to="/Homepage" className="btn btn-primary">Home page</Link>
           </div>
         );
@@ -40,10 +48,11 @@ async componentDidMount() {
       console.log(this.state);
 
       await axios
-        .get(`http://127.0.0.1:5000/history?user_id=${this.state.user_id}`)
+        .get(`http://127.0.0.1:5000/history?user_id=${this.state.user.user_id}`)
         .then((result) => {
           console.log(result);
           this.setState({ games: result.data });
+          console.log(this.state.games[0].number_of_moves)
         })
         .catch((err) => {
           console.log(err);
