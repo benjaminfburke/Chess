@@ -119,7 +119,7 @@ class Gameboard(Resource):
         game_id = json.get("game_id")
         
         db.session.query(Game).filter(Game.game_id == game_id).update(
-            game_id=game_id, gameboard=gameboard, point_value=point_value, white=white, black=black
+            {"game_id": game_id, "gameboard": gameboard, "point_value": point_value, "white": white, "black": black}
         )
         db.session.commit()
         
@@ -168,7 +168,7 @@ class PairingGame(Resource):
     def get(self):
         user1_id = request.args.get("user1_id")
 
-        result = db.session.query(Pairing).filter(Pairing.user1_id == user1_id).all()
+        result = db.session.query(Pairing).filter(Pairing.user1_id == user1_id)
         pair = []
         for r in result:
             temp = {
@@ -178,7 +178,7 @@ class PairingGame(Resource):
             }
             pair.append(temp)
         
-        result2 = db.session.query(Pairing).filter(Pairing.user1_id == user1_id).all()
+        result2 = db.session.query(Pairing).filter(Pairing.user1_id == user1_id)  
         for r in result2:
             temp = {
                 "game_id": r.game_id,
@@ -274,7 +274,7 @@ class Register(Resource):
         score = json.get("score")
         
         db.session.query(User_Profile).filter(User_Profile.user_id == user_id).update(
-            username=username, name=name, user_id=user_id, email=email, wins=wins, losses=losses, score=score
+            {"username": username, "name": name, "user_id": user_id, "email": email, "wins": wins, "losses": losses, "score": score}
         )
         db.session.commit()
         
