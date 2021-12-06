@@ -58,16 +58,18 @@ class history(Resource):
     def get(self):
         user_id = request.args.get("game_id")
 
+        history = []
         result = db.session.query(History).filter(History.user_id == user_id).all()
-        temp = {
-            "game_id": result.game_id,
-            "user_id": result.user_id,
-            "opponent": result.opponent,
-            "outcome":result.outcome,
-            "number_of_moves": int(result.number_of_moves),
-            
-        }
-        return temp
+        for r in result:
+            temp = {
+                "game_id": r.game_id,
+                "user_id": r.user_id,
+                "opponent": r.opponent,
+                "outcome": r.outcome,
+                "number_of_moves": int(r.number_of_moves)
+            }
+            history.append(temp)
+        return history
 
 pairing_fields = api.model(
     "pairing", {"game_id": fields.String, "user1_id": fields.String, "user2_id": fields.String}
