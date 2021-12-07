@@ -42,7 +42,7 @@ class Login extends React.Component {
   }
   render() {
     if (this.state.signin) {
-      return <Redirect to="/" />;
+      return <Redirect to="/Homepage" />;
     }
     return (
       <div>

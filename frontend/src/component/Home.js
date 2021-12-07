@@ -46,6 +46,8 @@ class Home extends React.Component {
       const token = document.cookie.substring(13);
       const decoded = jsonWeb.verify(token, "123456");
       await this.setState({ user: decoded, signIn: true });
+    } else {
+      this.setState({ signIn: false });
     }
   }
 }
