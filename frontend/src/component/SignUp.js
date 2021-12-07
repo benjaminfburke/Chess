@@ -61,7 +61,6 @@ class SignUp extends React.Component {
         password: password,
       })
       .then((result) => {
-        console.log(result);
         this.setState({ user_id: result.data.user_id });
         if (result.data === "Username is taken") {
           alert("The username " + user + " is already taken");
@@ -81,7 +80,6 @@ class SignUp extends React.Component {
         email: email,
       })
       .then((result) => {
-        console.log(result);
         document.cookie = "UserIdentity=" + result.data.token;
       })
       .catch((err) => {

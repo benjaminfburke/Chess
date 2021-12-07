@@ -35,6 +35,11 @@ class Homepage extends React.Component {
               <Link to="/accountinformation" className="btn btn-primary">
                 Account Information
               </Link>
+              <br />
+              <br />
+              <Link to="/creategame" className="btn btn-primary">
+                Start Game
+              </Link>
             </Col>
           </Row>
         </Form>
@@ -58,18 +63,15 @@ class Homepage extends React.Component {
 
   async componentDidMount() {
     if (document.cookie) {
-      console.log(document.cookie);
       const token = document.cookie.substring(13);
       const decoded = jsonWeb.verify(token, "123456");
       await this.setState({ user: decoded, signIn: true });
-      console.log(this.state);
 
       await axios
         .get(
           `http://127.0.0.1:5000/pairing?user1_id=${this.state.user.user_id}`
         )
         .then((result) => {
-          console.log(result);
           this.setState({ games: result.data });
         })
         .catch((err) => {

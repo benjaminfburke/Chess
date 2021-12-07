@@ -33,8 +33,9 @@ class History(db.Model):
     opponent = Column(Text, nullable=False)
     game_id = Column(Text, nullable=False, primary_key=True)
     number_of_moves = Column(Numeric, nullable=False)
-    outcome= Column(Text, nullable=False)
-    
+    outcome = Column(Text, nullable=False)
+
+
 class Game(db.Model):
     __tablename__ = "game"
     __table_args__ = {"schema": "auth"}
@@ -43,6 +44,7 @@ class Game(db.Model):
     gameboard = Column(Text, nullable=False)
     white = Column(Text, nullable=False)
     black = Column(Text, nullable=False)
+
 
 class Pairing(db.Model):
     __tablename__ = "pairing"

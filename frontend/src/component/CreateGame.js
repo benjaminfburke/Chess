@@ -20,7 +20,6 @@ class CreateGame extends React.Component {
     await axios
       .get(`http://127.0.0.1:5000/user_id?username=${opponent_name}`)
       .then((result) => {
-        console.log(result);
         opponent_id = result.data.opponent_id;
       })
       .catch((err) => {
@@ -31,8 +30,6 @@ class CreateGame extends React.Component {
       return;
     }
     let game_id = "";
-    console.log(this.state);
-    console.log(opponent_id);
     await axios
       .post("http://127.0.0.1:5000/game", {
         gameboard: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
@@ -41,7 +38,6 @@ class CreateGame extends React.Component {
         black: opponent_id,
       })
       .then((result) => {
-        console.log(result);
         game_id = result.data.game_id;
       })
       .catch((err) => {
@@ -53,9 +49,7 @@ class CreateGame extends React.Component {
         user2_id: opponent_id,
         game_id: game_id,
       })
-      .then((result) => {
-        console.log(result.data);
-      })
+      .then((result) => {})
       .catch((err) => {
         console.log(err);
       });
@@ -83,7 +77,6 @@ class CreateGame extends React.Component {
       const token = document.cookie.substring(13);
       const decoded = jsonWeb.verify(token, "123456");
       await this.setState({ user: decoded, signIn: true });
-      console.log(this.state);
     }
   }
 }

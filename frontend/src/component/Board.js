@@ -24,7 +24,6 @@ class Board extends React.Component {
     };
   }
   async endGame() {
-    console.log(this.state);
     let obj = this.state.user;
     obj.wins += 1;
     obj.score += 10;
@@ -89,9 +88,7 @@ class Board extends React.Component {
         outcome: outcome,
         number_of_moves: parseInt(this.state.fen[this.state.fen.length - 1]),
       })
-      .then((result) => {
-        console.log(result.data);
-      })
+      .then((result) => {})
       .catch((err) => {
         console.log(err);
       });
@@ -103,9 +100,7 @@ class Board extends React.Component {
         outcome: other,
         number_of_moves: parseInt(this.state.fen[this.state.fen.length - 1]),
       })
-      .then((result) => {
-        console.log(result.data);
-      })
+      .then((result) => {})
       .catch((err) => {
         console.log(err);
       });
@@ -114,9 +109,9 @@ class Board extends React.Component {
     if (this.state.gameOver) {
       return;
     }
-    // if (Game.turn() !== this.state.side.indexOf(0)) {
-    //   return;
-    // }
+    if (Game.turn() !== this.state.side.indexOf(0)) {
+      return;
+    }
     Game.move({ from: sourceSquare, to: targetSquare });
     this.setState({
       fen: Game.fen(),
@@ -189,7 +184,6 @@ class Board extends React.Component {
       await axios
         .get(`http://127.0.0.1:5000/game?game_id=${this.state.game_id}`)
         .then((result) => {
-          console.log(result.data);
           this.setState({ game: result.data, fen: result.data.gameboard });
           Game.load(this.state.fen);
           if (this.state.user.user_id === result.data.white) {
@@ -197,7 +191,6 @@ class Board extends React.Component {
           } else {
             this.setState({ side: "black" });
           }
-          console.log(this.state);
         })
         .catch((err) => {
           console.log(err);

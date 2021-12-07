@@ -37,12 +37,6 @@ class Home extends React.Component {
             <Link to="/Homepage">Home</Link>
           </div>
         )}
-        <div>
-          <Link to="/board">Board</Link>
-        </div>
-        <div>
-          <Link to="/creategame">Start Game</Link>
-        </div>
       </div>
     );
   }
@@ -52,7 +46,6 @@ class Home extends React.Component {
       const token = document.cookie.substring(13);
       const decoded = jsonWeb.verify(token, "123456");
       await this.setState({ user: decoded, signIn: true });
-      console.log(this.state);
     }
   }
 }
