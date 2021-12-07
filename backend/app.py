@@ -29,6 +29,10 @@ update_game = api.model(
     "game", {"game_id": fields.String, "gameboard": fields.String, "point_value": fields.Integer, "white": fields.String, "black": fields.String}
 )
 
+update_profile = api.model(
+    "profile", {"username": fields.String, "name": fields.String, "user_id": fields.String, "email": fields.String, "wins": fields.Integer, "losses": fields.Integer, "score": fields.Integer}
+)
+
 register_fields = api.model(
     "register",
     {
@@ -54,20 +58,21 @@ class history(Resource):
         db.session.add(newHistory)
         db.session.commit()
         return{"game_id":str(game_id)}
-    @api.doc(params=({"game_id": "game_id"}))
+    @api.doc(params=({"user_id": "user_id"}))
     def get(self):
-        user_id = request.args.get("game_id")
-
-        result = db.session.query(History).filter(History.user_id == user_id).all()
-        temp = {
-            "game_id": result.game_id,
-            "user_id": result.user_id,
-            "opponent": result.opponent,
-            "outcome":result.outcome,
-            "number_of_moves": int(result.number_of_moves),
-            
-        }
-        return temp
+        user_id = request.args.get("user_id")
+        history = []
+        result = db.session.query(History).filter(History.user_id == user_id)
+        for r in result:
+            temp = {
+                "game_id": r.game_id,
+                "user_id": r.user_id,
+                "opponent": r.opponent,
+                "outcome": r.outcome,
+                "number_of_moves": int(r.number_of_moves)
+            }
+            history.append(temp)
+        return history
 
 pairing_fields = api.model(
     "pairing", {"game_id": fields.String, "user1_id": fields.String, "user2_id": fields.String}
@@ -112,7 +117,7 @@ class Gameboard(Resource):
         game_id = json.get("game_id")
         
         db.session.query(Game).filter(Game.game_id == game_id).update(
-            game_id=game_id, gameboard=gameboard, point_value=point_value, white=white, black=black
+            {"game_id": game_id, "gameboard": gameboard, "point_value": point_value, "white": white, "black": black}
         )
         db.session.commit()
         
@@ -161,7 +166,7 @@ class PairingGame(Resource):
     def get(self):
         user1_id = request.args.get("user1_id")
 
-        result = db.session.query(Pairing).filter(Pairing.user1_id == user1_id).all()
+        result = db.session.query(Pairing).filter(Pairing.user1_id == user1_id)
         pair = []
         for r in result:
             temp = {
@@ -171,7 +176,7 @@ class PairingGame(Resource):
             }
             pair.append(temp)
         
-        result2 = db.session.query(Pairing).filter(Pairing.user1_id == user1_id).all()
+        result2 = db.session.query(Pairing).filter(Pairing.user1_id == user1_id)  
         for r in result2:
             temp = {
                 "game_id": r.game_id,
@@ -253,6 +258,25 @@ class Register(Resource):
 
         token = jwt.encode(payload=temp, key="123456")
         return {"token": token}
+    
+    @api.expect(update_profile)
+    def put(self):
+        json = request.get_json()
+
+        username = json.get("username")
+        name = json.get("name")
+        user_id = json.get("user_id")
+        email = json.get("email")
+        wins = json.get("wins")
+        losses = json.get("losses")
+        score = json.get("score")
+        
+        db.session.query(User_Profile).filter(User_Profile.user_id == user_id).update(
+            {"username": username, "name": name, "user_id": user_id, "email": email, "wins": wins, "losses": losses, "score": score}
+        )
+        db.session.commit()
+        
+        return {"user_id": str(user_id)}
     
 @api.route("/user_id")
 class GetUserID(Resource):

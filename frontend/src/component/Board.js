@@ -17,7 +17,6 @@ class Board extends React.Component {
       side: "white",
     };
   }
-
   onDrop(sourceSquare, targetSquare) {
     if (Game.turn() !== this.state.side.indexOf(0)) {
       return;
@@ -28,7 +27,7 @@ class Board extends React.Component {
     });
 
     if (Game.game_over()) {
-      console.log("Winner");
+      console.log(Game.turn());
     }
   }
   render() {
@@ -44,7 +43,6 @@ class Board extends React.Component {
     );
   }
   async componentDidMount() {
-    Game = new Chess(this.state.fen);
     if (document.cookie) {
       const token = document.cookie.substring(13);
       const decoded = jsonWeb.verify(token, "123456");
@@ -54,6 +52,7 @@ class Board extends React.Component {
         .then((result) => {
           console.log(result.data);
           this.setState({ game: result.data, fen: result.data.gameboard });
+          Game = new Chess(this.state.fen);
           if (this.state.user.user_id !== result.data.white) {
             this.setState({ side: "white" });
           } else {
