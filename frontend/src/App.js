@@ -23,7 +23,7 @@ function App() {
             component={() => <AccountInformation />}
           />
           <Route path="/history" component={() => <History />} />
-          <Route path="/board/:gameid" component={() => <Board />} />
+          <Route path="/board/:gameid" component={Board} />
           <Route path="/creategame" component={() => <CreateGame />} />
         </Switch>
       </div>

@@ -32,6 +32,7 @@ class CreateGame extends React.Component {
     }
     let game_id = "";
     console.log(this.state);
+    console.log(opponent_id);
     await axios
       .post("http://127.0.0.1:5000/game", {
         gameboard: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",

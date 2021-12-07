@@ -18,7 +18,6 @@ function AppNavbar() {
         <Nav className="ml-auto">
           <NavDropdown
             className="pl-3"
-            alignRight
             title={<span className="text-white my-auto">Menu</span>}
           >
             <NavDropdown.Item

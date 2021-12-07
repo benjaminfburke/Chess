@@ -19,12 +19,14 @@ class Board extends React.Component {
   }
 
   onDrop(sourceSquare, targetSquare) {
+    if (Game.turn() !== this.state.side.indexOf(0)) {
+      return;
+    }
     Game.move({ from: sourceSquare, to: targetSquare });
-    console.log(sourceSquare);
-    console.log(targetSquare);
     this.setState({
       fen: Game.fen(),
     });
+
     if (Game.game_over()) {
       console.log("Winner");
     }
@@ -52,6 +54,12 @@ class Board extends React.Component {
         .then((result) => {
           console.log(result.data);
           this.setState({ game: result.data, fen: result.data.gameboard });
+          if (this.state.user.user_id !== result.data.white) {
+            this.setState({ side: "white" });
+          } else {
+            this.setState({ side: "black" });
+          }
+          console.log(this.state);
         })
         .catch((err) => {
           console.log(err);
