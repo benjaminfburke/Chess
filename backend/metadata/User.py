@@ -29,12 +29,11 @@ class History(db.Model):
     __tablename__ = "history"
     __table_args__ = {"schema": "auth"}
 
-    user_id = Column(Text, nullable=False)
+    user_id = Column(Text, nullable=False, primary_key=True)
     opponent = Column(Text, nullable=False)
     game_id = Column(Text, nullable=False, primary_key=True)
-
-    outcome= Column(Text, nullable=False)
     number_of_moves = Column(Numeric, nullable=False)
+    outcome= Column(Text, nullable=False)
     
 class Game(db.Model):
     __tablename__ = "game"
@@ -42,7 +41,6 @@ class Game(db.Model):
 
     game_id = Column(Text, nullable=False, primary_key=True)
     gameboard = Column(Text, nullable=False)
-    point_value = Column(Numeric, nullable=False)
     white = Column(Text, nullable=False)
     black = Column(Text, nullable=False)
 

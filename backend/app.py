@@ -1,5 +1,5 @@
 from flask import Flask, request, abort
-from sqlalchemy.sql.functions import user
+from sqlalchemy.sql import text
 from startApp import app
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
@@ -19,14 +19,14 @@ login_fields = api.model(
 )
 
 history_fields = api.model(
-    "history", {"game_id":fields.String,"user_id": fields.String, "opponent": fields.String,"outcome":fields.String,"number_of_moves":fields.Integer}
+    "history", {"game_id":fields.String,"user_id": fields.String, "opponent": fields.String,"outcome":fields.String, "number_of_moves": fields.Integer}
 )
 game_fields = api.model(
-    "game", {"gameboard": fields.String, "point_value": fields.Integer, "white": fields.String, "black": fields.String}
+    "game", {"gameboard": fields.String, "white": fields.String, "black": fields.String}
 )
 
 update_game = api.model(
-    "game", {"game_id": fields.String, "gameboard": fields.String, "point_value": fields.Integer, "white": fields.String, "black": fields.String}
+    "game", {"game_id": fields.String, "gameboard": fields.String, "white": fields.String, "black": fields.String}
 )
 
 update_profile = api.model(
@@ -51,10 +51,9 @@ class history(Resource):
         user_id =json.get("user_id")
         outcome =json.get("outcome")
         opponent=json.get("opponent")
-
         number_of_moves=json.get("number_of_moves")
         
-        newHistory = History(game_id =game_id, user_id =user_id, opponent =opponent,outcome =outcome, number_of_moves=number_of_moves)
+        newHistory = History(game_id =game_id, user_id =user_id, opponent =opponent,number_of_moves=number_of_moves,outcome =outcome)
         db.session.add(newHistory)
         db.session.commit()
         return{"game_id":str(game_id)}
@@ -62,14 +61,16 @@ class history(Resource):
     def get(self):
         user_id = request.args.get("user_id")
         history = []
-        result = db.session.query(History).filter(History.user_id == user_id)
+        query = "SELECT * FROM auth.history WHERE user_id = '%s';" % (user_id)
+        result = db.session.execute(text(query))
+        # result = db.session.query(History).filter(History.user_id == user_id)
         for r in result:
             temp = {
                 "game_id": r.game_id,
                 "user_id": r.user_id,
                 "opponent": r.opponent,
                 "outcome": r.outcome,
-                "number_of_moves": int(r.number_of_moves)
+                "number_of_moves": r.number_of_moves,
             }
             history.append(temp)
         return history
@@ -84,13 +85,12 @@ class Gameboard(Resource):
         json = request.get_json()
 
         gameboard = json.get("gameboard")
-        point_value = json.get("point_value")
         white = json.get("white")
         black = json.get("black")
 
         game_id = uuid.uuid4()
         
-        newGame = Game(game_id=game_id, gameboard=gameboard, point_value=point_value, white=white, black=black)
+        newGame = Game(game_id=game_id, gameboard=gameboard, white=white, black=black)
         db.session.add(newGame)
         db.session.commit()
         return {"game_id": str(game_id)}
@@ -101,7 +101,6 @@ class Gameboard(Resource):
         result = db.session.query(Game).filter(Game.game_id == game_id).first()
         temp = {
             "gameboard": result.gameboard,
-            "point_value": int(result.point_value),
             "white": result.white,
             "black": result.black
         }
@@ -111,13 +110,12 @@ class Gameboard(Resource):
         json = request.get_json()
 
         gameboard = json.get("gameboard")
-        point_value = json.get("point_value")
         white = json.get("white")
         black = json.get("black")
         game_id = json.get("game_id")
         
         db.session.query(Game).filter(Game.game_id == game_id).update(
-            {"game_id": game_id, "gameboard": gameboard, "point_value": point_value, "white": white, "black": black}
+            {"game_id": game_id, "gameboard": gameboard, "white": white, "black": black}
         )
         db.session.commit()
         
@@ -165,8 +163,8 @@ class PairingGame(Resource):
     @api.doc(params={"user1_id": "user1_id"})
     def get(self):
         user1_id = request.args.get("user1_id")
-
-        result = db.session.query(Pairing).filter(Pairing.user1_id == user1_id)
+        query = "SELECT * FROM auth.pairing WHERE user1_id='%s' OR user2_id='%s';" % (user1_id, user1_id)
+        result = db.session.execute(text(query))
         pair = []
         for r in result:
             temp = {
@@ -176,14 +174,14 @@ class PairingGame(Resource):
             }
             pair.append(temp)
         
-        result2 = db.session.query(Pairing).filter(Pairing.user1_id == user1_id)  
-        for r in result2:
-            temp = {
-                "game_id": r.game_id,
-                "user1_id": r.user1_id,
-                "user2_id": r.user2_id,
-            }
-            pair.append(temp)
+        # result2 = db.session.query(Pairing).filter(Pairing.user1_id == user1_id)  
+        # for r in result2:
+        #     temp = {
+        #         "game_id": r.game_id,
+        #         "user1_id": r.user1_id,
+        #         "user2_id": r.user2_id,
+        #     }
+        #     pair.append(temp)
         return pair
 
 
@@ -276,7 +274,18 @@ class Register(Resource):
         )
         db.session.commit()
         
-        return {"user_id": str(user_id)}
+        temp = {
+            "username": username,
+            "name": name,
+            "user_id": user_id,
+            "email": email,
+            "wins": wins,
+            "losses": losses,
+            "score": score,
+        }
+
+        token = jwt.encode(payload=temp, key="123456")
+        return {"token": token}
     
 @api.route("/user_id")
 class GetUserID(Resource):

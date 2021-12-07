@@ -35,11 +35,11 @@ class Login extends React.Component {
       .then((result) => {
         console.log(result);
         document.cookie = "UserIdentity=" + result.data.token;
+        this.setState({ signin: true });
       })
       .catch((err) => {
         console.log(err);
       });
-    this.setState({ signin: true });
   }
   render() {
     if (this.state.signin) {
