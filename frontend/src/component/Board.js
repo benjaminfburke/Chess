@@ -109,7 +109,7 @@ class Board extends React.Component {
     if (this.state.gameOver) {
       return;
     }
-    if (Game.turn() !== this.state.side.indexOf(0)) {
+    if (Game.turn() !== this.state.side[0]) {
       return;
     }
     Game.move({ from: sourceSquare, to: targetSquare });
@@ -191,16 +191,18 @@ class Board extends React.Component {
           } else {
             this.setState({ side: "black" });
           }
+          console.log(this.state);
         })
         .catch((err) => {
           console.log(err);
         });
       if (Game.game_over()) {
         this.setState({ gameOver: true });
-        if (Game.turn() === "w") {
+        if (Game.turn() === "b") {
           this.setState({ winner: 1 });
         }
       }
+      console.log(this.state);
     }
   }
 }

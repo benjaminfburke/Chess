@@ -23,7 +23,9 @@ class Homepage extends React.Component {
           <Row>
             <Col xs="4">
               <br />
-              <Button type="submit">PlayNewGame</Button>
+              <Link to="/creategame" class="btn btn-primary">
+                PlayNewGame
+              </Link>
               <br />
               <br />
               <Link to="/history" className="btn btn-primary">

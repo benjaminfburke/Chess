@@ -12,7 +12,7 @@ function AppNavbar() {
   return (
     <div>
       <Navbar bg="primary" variant="dark">
-        <Navbar.Brand as={Link} to="/">
+        <Navbar.Brand as={Link} to="/Homepage">
           <img data-test="theLogo" src={logo} alt="logo" width="50" />
         </Navbar.Brand>
         <Nav className="ml-auto">
