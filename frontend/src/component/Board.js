@@ -144,6 +144,16 @@ class Board extends React.Component {
         console.log(err);
       });
     if (Game.game_over()) {
+      await axios
+        .get(`http://127.0.0.1:5000/profile?user_id=${this.state.user_id}`)
+        .then((result) => {
+          document.cookie =
+            document.cookie + ";expires=Thu, 01 Jan 1970 00:00:01 GMT";
+          document.cookie = "UserIdentity=" + result.data.token;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
       this.setState({ gameOver: true });
       if (Game.turn() === "w") {
         this.setState({ winner: 1 });
