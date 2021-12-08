@@ -358,6 +358,20 @@ class GetUserID(Resource):
             return abort(403, "User doesn't exist")
         return {"opponent_id": str(user_id.user_id)}
 
+@api.route("/average")
+class averageRating(Resource):
+    def get(self):
+        query = "SELECT AVG(score) FROM auth.user_profile;"
+        result = db.session.execute(text(query))
+
+        pair = []
+        for r in result:
+            temp = {
+                "average": str(r.avg)
+            }
+            pair.append(temp)
+        return (pair)
+
 
 if __name__ == "__main__":
     app.run(debug=True, threaded=True)
