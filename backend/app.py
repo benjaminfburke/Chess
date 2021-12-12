@@ -125,9 +125,6 @@ class Gameboard(Resource):
 
         game_id = uuid.uuid4()
 
-        # newGame = Game(game_id=game_id, gameboard=gameboard, white=white, black=black)
-        # db.session.add(newGame)
-        # db.session.commit()
         tran = """
         DO
         $$
@@ -139,7 +136,12 @@ class Gameboard(Resource):
         
         END;
         $$
-        """ % (game_id, gameboard, white, black)
+        """ % (
+            game_id,
+            gameboard,
+            white,
+            black,
+        )
         db.session.execute(text(tran))
         db.session.commit()
         return {"game_id": str(game_id)}
@@ -280,7 +282,7 @@ class Register(Resource):
             "losses": int(result.losses),
             "score": int(result.score),
         }
-        
+
         return {"token": temp}
 
     @api.expect(register_fields)
@@ -370,6 +372,7 @@ class GetUserID(Resource):
             return abort(403, "User doesn't exist")
         return {"opponent_id": str(user_id.user_id)}
 
+
 @api.route("/average")
 class averageRating(Resource):
     def get(self):
@@ -378,11 +381,9 @@ class averageRating(Resource):
 
         pair = []
         for r in result:
-            temp = {
-                "average": str(r.avg)
-            }
+            temp = {"average": str(r.avg)}
             pair.append(temp)
-        return (pair)
+        return pair
 
 
 if __name__ == "__main__":
