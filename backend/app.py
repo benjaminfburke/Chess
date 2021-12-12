@@ -76,7 +76,7 @@ class history(Resource):
         outcome = json.get("outcome")
         opponent = json.get("opponent")
         number_of_moves = json.get("number_of_moves")
-
+        print(user_id)
         newHistory = History(
             game_id=game_id,
             user_id=user_id,
@@ -125,8 +125,22 @@ class Gameboard(Resource):
 
         game_id = uuid.uuid4()
 
-        newGame = Game(game_id=game_id, gameboard=gameboard, white=white, black=black)
-        db.session.add(newGame)
+        # newGame = Game(game_id=game_id, gameboard=gameboard, white=white, black=black)
+        # db.session.add(newGame)
+        # db.session.commit()
+        tran = """
+        DO
+        $$
+        BEGIN
+            INSERT INTO auth.game
+            VALUES('%s', '%s', '%s', '%s');
+        EXCEPTION WHEN check_violation THEN
+                    ROLLBACK;
+        
+        END;
+        $$
+        """ % (game_id, gameboard, white, black)
+        db.session.execute(text(tran))
         db.session.commit()
         return {"game_id": str(game_id)}
 
@@ -266,8 +280,8 @@ class Register(Resource):
             "losses": int(result.losses),
             "score": int(result.score),
         }
-        token = jwt.encode(payload=temp, key="123456")
-        return {"token": token}
+        
+        return {"token": temp}
 
     @api.expect(register_fields)
     def post(self):
@@ -302,8 +316,7 @@ class Register(Resource):
             "score": score,
         }
 
-        token = jwt.encode(payload=temp, key="123456")
-        return {"token": token}
+        return {"token": temp}
 
     @api.expect(update_profile)
     def put(self):
@@ -340,8 +353,7 @@ class Register(Resource):
             "score": score,
         }
 
-        token = jwt.encode(payload=temp, key="123456")
-        return {"token": token}
+        return {"token": temp}
 
 
 @api.route("/user_id")

@@ -35,9 +35,7 @@ class Board extends React.Component {
     await axios
       .get(`http://127.0.0.1:5000/profile?user_id=${opponent_id}`)
       .then((result) => {
-        const token = result.data.token;
-        const decoded = jsonWeb.verify(token, "123456");
-        opp = decoded;
+        opp = result.data.token;
       })
       .catch((err) => {
         console.log(err);
@@ -57,8 +55,10 @@ class Board extends React.Component {
       .then((result) => {
         document.cookie =
           document.cookie + ";expires=Thu, 01 Jan 1970 00:00:01 GMT";
-        document.cookie = "UserIdentity=" + result.data.token;
-        this.setState({ user: obj });
+        const decoded = JSON.stringify(result.data.token);
+        console.log(decoded);
+        document.cookie = "UserIdentity=" + decoded;
+        this.setState({ user: result.data.token });
       })
       .catch((err) => {
         console.log(err);
@@ -189,7 +189,7 @@ class Board extends React.Component {
   async componentDidMount() {
     if (document.cookie) {
       const token = document.cookie.substring(13);
-      const decoded = jsonWeb.verify(token, "123456");
+      const decoded = JSON.parse(token);
       await this.setState({ user: decoded, signIn: true });
       await axios
         .get(`http://127.0.0.1:5000/game?game_id=${this.state.game_id}`)

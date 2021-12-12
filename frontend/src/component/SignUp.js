@@ -80,7 +80,7 @@ class SignUp extends React.Component {
         email: email,
       })
       .then((result) => {
-        document.cookie = "UserIdentity=" + result.data.token;
+        document.cookie = "UserIdentity=" + JSON.stringify(result.data.token);
       })
       .catch((err) => {
         console.log(err);

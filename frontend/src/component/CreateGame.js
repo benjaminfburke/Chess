@@ -74,7 +74,7 @@ class CreateGame extends React.Component {
   async componentDidMount() {
     if (document.cookie) {
       const token = document.cookie.substring(13);
-      const decoded = jsonWeb.verify(token, "123456");
+      const decoded = JSON.parse(token);
       await this.setState({ user: decoded, signIn: true });
     }
   }

@@ -2,6 +2,7 @@ import axios from "axios";
 import React from "react";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { Redirect } from "react-router-dom";
+const jsonWeb = require("jsonwebtoken");
 
 class Login extends React.Component {
   constructor(props) {
@@ -33,7 +34,8 @@ class Login extends React.Component {
     await axios
       .get(`http://127.0.0.1:5000/profile?user_id=${this.state.user_id}`)
       .then((result) => {
-        document.cookie = "UserIdentity=" + result.data.token;
+        console.log(JSON.stringify(result.data.token));
+        document.cookie = "UserIdentity=" + JSON.stringify(result.data.token);
         this.setState({ signin: true });
       })
       .catch((err) => {

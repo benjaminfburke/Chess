@@ -50,12 +50,13 @@ class History extends React.Component {
   async componentDidMount() {
     if (document.cookie) {
       const token = document.cookie.substring(13);
-      const decoded = jsonWeb.verify(token, "123456");
+      const decoded = JSON.parse(token);
       await this.setState({ user: decoded, signIn: true });
 
       await axios
         .get(`http://127.0.0.1:5000/history?user_id=${this.state.user.user_id}`)
         .then((result) => {
+          console.log(result);
           this.setState({ games: result.data });
         })
         .catch((err) => {
